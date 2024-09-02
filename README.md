@@ -3,7 +3,7 @@ https://drive.google.com/file/d/1fhJApO7gC-EwvOxGhlyAADZ-xvPztG1I/view?usp=drive
 <br>
 Features:<br>
 Checklist of dailies<br>
-Event dailies populate during their month<br<br>
+Event dailies populate during their month<br>
 Timers for activities that reset after a certain amount of time<br>
 Volume controlled TTS alarms for timers<br>
 User defined links in colapsable catagories<br>
