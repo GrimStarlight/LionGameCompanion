@@ -1,0 +1,50 @@
+{
+  "name": "lion-game-companion",
+  "version": "1.0.0",
+  "description": "A desktop application to track Lioden daily tasks and cooldowns.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "Electron",
+    "Lioden",
+    "Task Tracker"
+  ],
+  "author": "GrimStarlight",
+  "license": "license.txt",
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "io.github.GrimStarlight",
+    "productName": "Lion Game Companion",
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "lion.ico",
+      "publisherName": "GrimStarlight"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "lion.ico",
+      "uninstallerIcon": "lion.ico",
+      "uninstallDisplayName": "Uninstall Lion Game Companion",
+      "license": "license.txt",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Lion Game Companion"
+    },
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "output": "build"
+    }
+  }
+}

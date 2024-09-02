@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lion Game Companion</title>
+  <style>
+    body {
+      background-color: #03040a; /* Very dark, almost black blue */
+      background-image: url('background.png');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #a0aab8; /* Soft gray text */
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .header-container {
+      background: linear-gradient(to right, #0f141e, #03040a); /* Very dark gradient */
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-right: 40px; /* Add padding to the right side */
+    }
+
+    .header-container img {
+      height: 60px; /* Adjust height as needed */
+    }
+
+    .header-container .flipped {
+      transform: scaleX(-1); /* Flips the image horizontally */
+      margin-right: 20px; /* Pull the image inward */
+    }
+
+    .header-container h1 {
+      font-size: 48px;
+      margin: 0;
+      color: #a0aab8; /* Soft gray inspired by the stars */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      font-family: 'Arial Black', sans-serif;
+    }
+
+    .task-container {
+      background-color: #0f141e; /* Deep dark gray-blue */
+	  background: url('midnight.png');
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 900px;
+      height: 1100px;
+      margin-top: 120px; /* Adjusted to accommodate the header height */
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .task-column, .links-column, .reset-column {
+      background-color: none;
+      outline: 2px solid #76D1CE;
+	  border-radius: 5px;
+	  height: 99%;
+      padding: 10px;
+    }
+
+    .task-column {
+      flex: 2;
+      margin-right: 10px;
+    }
+
+    .links-column {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+.reset-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;       /* Arrange items in a column */
+  justify-content: flex-start;  /* Align the content at the top */
+  align-items: flex-start;      /* Align the content to the left */
+  height: 99%;                 /* Ensure it fills the entire height */
+  padding-top: 10px;            /* Optional: Add some space from the top */
+}
+
+.reset-button {
+  background-color: #1a1f28; /* Very dark midnight blue */
+  color: #a0aab8;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+
+    .reset-button:hover {
+      background-color: #202736; /* Darkened subtle cyan on hover */
+    }
+
+    .task-section h2, .links-section h3 {
+      color: #a0aab8;
+    }
+
+    /* New styles for custom links section */
+    .links-section {
+      margin-bottom: 20px;
+    }
+
+    .links-section h3 {
+      font-size: 18px;
+      color: #a0aab8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .links-section h3::before {
+      content: "►";
+      margin-right: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .links-section.collapsed h3::before {
+      transform: rotate(90deg);
+    }
+
+    .links-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: none;
+    }
+
+    .links-section.collapsed .links-list {
+      display: block;
+    }
+
+    .links-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .links-list li span {
+      margin-left: 5px;
+      cursor: pointer;
+      color: #ff4c4c; /* Red for delete icon */
+    }
+
+    .add-link-button {
+      background-color: #1a1f28;
+      color: #a0aab8;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .add-link-button:hover {
+      background-color: #202736;
+    }
+
+    /* Modal container */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 10; /* Sits on top of everything */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+    }
+
+    /* Modal content box */
+    .modal-content {
+      background-color: #1a1f28;
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%; /* Could be more or less, depending on screen size */
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      color: #a0aab8;
+    }
+
+    /* Close button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Style for inputs and buttons inside the modal */
+    .modal-content input,
+    .modal-content select,
+    .modal-content button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background-color: #202736;
+      color: #fff;
+    }
+
+    .modal-content button {
+      background-color: #4da6ff; /* Submit button color */
+      cursor: pointer;
+      border: none;
+    }
+
+    .modal-content button:hover {
+      background-color: #377dbd;
+    }
+
+	task-column,links-column, reset-column {
+	background: none;
+
+	}
+
+/* Task links */
+.task-section a,
+.task-container label {
+  color: #82AD84; /* Brighter, bluer mossy green */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* User-defined links */
+.links-list a,
+.footer-container a {
+  color: #76D1CE;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Hover effect (optional) */
+.task-section a:hover,
+.footer-container a:hover,
+.links-list a:hover {
+  color: #86E1BE; /* Slightly darker mossy green on hover */
+}
+input:focus, select:focus, button:focus {
+  outline: 2px solid #76D1CE; /* Change the color to match your theme */
+  outline-offset: 2px; /* Adjusts the spacing of the outline */
+}
+
+.footer-container {
+  background: linear-gradient(to right, #0f141e, #03040a); /* Same dark gradient as header */
+  color: #5A737C; /* Dimmer soft gray text color */
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5); /* Similar shadow as header */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.footer-container p {
+  margin: 0;
+  font-size: 12px; /* Slightly larger text */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Same text shadow as header */
+}
+
+.volume-slider-container {
+  margin-bottom: 20px; /* Add some space below the slider */
+  color: #86E1FE; /* Match the teal color */
+}
+
+#volumeSlider {
+  width: 100%;
+  background-color: #333; /* Dark background for the slider */
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.option-label {
+  margin-left: 10px;
+  color: #a0aab8; /* Matches your existing text color */
+  font-family: 'Roboto', sans-serif;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #555;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #76D1CE;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+  </style>
+</head>
+<body>
+  <div class="header-container">
+    <img src="lion.png" alt="Lion Image">
+    <h1>Lion Game Companion</h1>
+    <img src="lion.png" alt="Flipped Lion Image" class="flipped">
+  </div>
+
+  <div class="task-container">
+    <div class="task-column">
+      <div class="task-section">
+        <h2>Timers</h2>
+        <ul id="timer-tasks">
+          <!-- Timer tasks will be dynamically added here by JavaScript -->
+        </ul>
+      </div>
+
+      <div class="task-section">
+        <h2>Daily</h2>
+        <ul id="daily-tasks">
+          <!-- Daily tasks will be dynamically added here by JavaScript -->
+        </ul>
+      </div>
+
+      <div class="task-section">
+        <h2>Event</h2>
+        <ul id="event-tasks">
+          <!-- Event tasks will be dynamically added here by JavaScript -->
+        </ul>
+		<Br><br><br><br><br><br><br><br><br><Br><br><br><br><br><br><br><br><br><Br>
+      </div>
+    </div>
+
+    <!-- Custom Links Section -->
+    <div class="links-column">
+	<h2>User Links</h2>
+      <div class="links-section" id="studs-section">
+        <h3 onclick="toggleSection('studs-section')">Studs</h3>
+        <ul class="links-list" id="studs-list">
+          <!-- Custom Studs Links will be added here dynamically -->
+        </ul>
+      </div>
+
+      <div class="links-section" id="searches-section">
+        <h3 onclick="toggleSection('searches-section')">Searches</h3>
+        <ul class="links-list" id="searches-list">
+          <!-- Custom Searches Links will be added here dynamically -->
+        </ul>
+      </div>
+
+	  <div class="links-section" id="reference-section">
+  <h3 onclick="toggleSection('reference-section')">Reference</h3>
+  <ul id="reference-list" class="links-list">
+    <!-- Reference links will be added here -->
+  </ul>
+</div>
+
+
+      <div class="links-section" id="other-section">
+        <h3 onclick="toggleSection('other-section')">Other</h3>
+        <ul class="links-list" id="other-list">
+          <!-- Custom Other Links will be added here dynamically -->
+        </ul>
+      </div>
+
+      <button class="add-link-button" onclick="openAddLinkPopup()">Add New Link</button>
+    </div>
+
+    <!-- Reset Button Section -->
+    <div class="reset-column">
+	<h2>Options</h2>
+       <button id="resetButton" class="reset-button">Reset All Timers</button>
+  <button id="deleteDataButton" class="reset-button">Delete All Data</button>
+	  <div class="volume-slider-container">
+  <label for="volumeSlider">Alarm Volume: </label>
+  <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+</div>
+<div class="option">
+  <label class="switch">
+    <input type="checkbox" id="altAccountToggle" onchange="handleAltAccountToggle()">
+    <span class="slider"></span>
+  </label>
+  <span class="option-label">Alt Account Tasks</span>
+</div>
+    </div>
+  </div>
+
+<!-- Modal for adding a new link -->
+<div id="addLinkModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeAddLinkPopup()">&times;</span>
+    <h2>Add New Link</h2>
+    <label for="linkName">Name:</label>
+    <input type="text" id="linkName">
+    <label for="linkUrl">URL:</label>
+    <input type="text" id="linkUrl">
+    <label for="linkCategory">Category:</label>
+    <select id="linkCategory">
+      <option value="studs">Studs</option>
+      <option value="searches">Searches</option>
+	  <option value="reference">Reference</option>
+      <option value="other">Other</option>
+    </select>
+    <button onclick="addLink()">Add Link</button>
+  </div>
+</div>
+<div class="footer-container">
+  <p>Code © 2024 Lion Game Companion All rights reserved. Send bug reports to me <a href=https://www.lioden.com/compose.php?to=93344">here</a>.</p>
+   <p>Lioden and all related references are the intellectual property of Lioden Ltd © 2012-2024.</p>
+</div>
+  <script src="renderer.js"></script>
+</body>
+</html>
