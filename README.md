@@ -1,6 +1,11 @@
 Download the installer here, currently only compatable with windows: <br>
 https://drive.google.com/file/d/1fhJApO7gC-EwvOxGhlyAADZ-xvPztG1I/view?usp=drive_link<br>
 <br>
+Download the unpacked files for windows here:<br>
+https://drive.google.com/file/d/169lLwEBhF5T05tMSKAMaOjECDSqNRldn/view?usp=sharing
+<br><br><b>
+If you don't know which to get, get the installer.<br>
+</b><br>
 Features:<br>
 Checklist of dailies<br>
 Event dailies populate during their month<br>
