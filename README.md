@@ -19,4 +19,5 @@ Make certain events reset at midnight instead of rollover.<br>
 Add user defined tasks?<br>
 Nonverbal alarm option<br>
 Flash icon on timer option<br>
+Make links sortable and edittable<br>
 Fulfil suggestions
